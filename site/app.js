@@ -12,6 +12,7 @@
   var app = document.getElementById("app");
   var state = { tok: null };
 
+  /* ── helpers ─────────────────────────────────────────── */
   var FA = "۰۱۲۳۴۵۶۷۸۹";
   function fa(n) { return String(n).replace(/[0-9]/g, function (d) { return FA[+d]; }); }
   function esc(s) {
@@ -19,16 +20,39 @@
       return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
     });
   }
+  function inline(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
+  function paras(s) {
+    if (!s) return "";
+    return String(s).split(/\n{2,}/).map(function (p) {
+      var lines = p.split("\n");
+      if (lines.every(function (l) { return /^\s*([-•*]|[0-9۰-۹]+[.)-])\s+/.test(l); }))
+        return "<ul>" + lines.map(function (l) { return "<li>" + inline(l.replace(/^\s*([-•*]|[0-9۰-۹]+[.)-])\s+/, "")) + "</li>"; }).join("") + "</ul>";
+      return "<p>" + lines.map(inline).join("<br>") + "</p>";
+    }).join("");
+  }
+  function norm(s) {
+    return String(s || "").replace(/[ي]/g, "ی").replace(/[ك]/g, "ک").replace(/[\u064B-\u0652\u0670]/g, "")
+      .replace(/[۰-۹]/g, function (d) { return FA.indexOf(d); }).replace(/\u200c/g, " ").toLowerCase();
+  }
   function toast(t) {
     var el = document.createElement("div"); el.className = "toast"; el.textContent = t;
     document.body.appendChild(el); setTimeout(function () { el.remove(); }, 2600);
   }
+  function getJSON(url) {
+    return fetch(url, { cache: "force-cache" }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); });
+  }
+  var spinner = '<div class="spinner" aria-label="در حال بارگیری"></div>';
+
+  /* ── theme and reading size ──────────────────────────── */
   function applyPrefs() {
     var t = localStorage.getItem("lexa-web-theme") || "light";
     document.documentElement.setAttribute("data-theme", t);
+    var s = +(localStorage.getItem("lexa-web-size") || 17);
+    document.documentElement.style.setProperty("--read-size", s + "px");
   }
   applyPrefs();
 
+  /* ── auth (Supabase REST, same project as the app) ───── */
   function loadTok() { try { state.tok = JSON.parse(localStorage.getItem(TOK_KEY) || "null"); } catch (e) { state.tok = null; } }
   function saveTok(t) { state.tok = t; if (t) localStorage.setItem(TOK_KEY, JSON.stringify(t)); else localStorage.removeItem(TOK_KEY); }
   function user() { return state.tok && state.tok.user; }
@@ -90,6 +114,7 @@
     location.hash = "#/";
     route();
   }
+  /* Links from confirmation and recovery emails come back as #access_token=...&type=... */
   function consumeAuthHash() {
     var h = location.hash.replace(/^#\/?/, "");
     if (h.indexOf("access_token=") < 0 && h.indexOf("error=") < 0) return Promise.resolve(null);
@@ -105,6 +130,7 @@
       }).catch(function () { return { err: "ورود با لینک ایمیل انجام نشد." }; });
   }
 
+  /* ── layout ──────────────────────────────────────────── */
   function topbar(active) {
     var u = user();
     var links = u
@@ -123,6 +149,7 @@
   }
   function render(html, active) { app.innerHTML = topbar(active) + html + footer(); window.scrollTo(0, 0); }
 
+  /* ── pages ───────────────────────────────────────────── */
   function pageHome() {
     var stats = '<div class="stats"><div><b id="st-l">…</b><span>جلسهٔ آموزشی</span></div><div><b id="st-q">…</b><span>تست با پاسخ تشریحی</span></div><div><b>رایگان</b><span>برای همه</span></div></div>';
     render(
@@ -205,6 +232,7 @@
   function field(n, label, type, ac) { return '<label class="f"><span>' + label + '</span><input name="' + n + '" type="' + type + '" autocomplete="' + ac + '"' + (type === "email" || type === "password" ? ' dir="ltr"' : "") + ' required></label>'; }
   function msg(k, t) { return '<div class="msg ' + k + '">' + esc(t) + '</div>'; }
 
+  /* ── router ──────────────────────────────────────────── */
   function goApp() { location.href = APP_URL; }
   function route() {
     var parts = location.hash.replace(/^#\/?/, "").split("/").map(decodeURIComponent);
@@ -223,6 +251,7 @@
     if (a.dataset.act === "theme") { var cur = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark"; localStorage.setItem("lexa-web-theme", cur); applyPrefs(); }
   });
 
+  /* ── boot ────────────────────────────────────────────── */
   consumeAuthHash().then(function (r) {
     if (r && r.err) { pendingNotice = msg("err", r.err); location.hash = "#/auth/in"; route(); return; }
     if (r && r.type === "recovery") { location.hash = "#/auth/reset"; route(); return; }
