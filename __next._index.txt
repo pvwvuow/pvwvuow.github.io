@@ -1,8 +1,8 @@
 1:"$Sreact.fragment"
-8:I[27410,["/_next/static/chunks/c000860f99373d94.js","/_next/static/chunks/b475fe756643a716.js","/_next/static/chunks/4bae855707b76f4b.js"],"ThemeProvider"]
+8:I[27410,["/_next/static/chunks/c000860f99373d94.js","/_next/static/chunks/b475fe756643a716.js","/_next/static/chunks/99712cb00c201486.js"],"ThemeProvider"]
 9:I[39756,["/_next/static/chunks/2f236954d6a65e12.js"],"default"]
 a:I[37457,["/_next/static/chunks/2f236954d6a65e12.js"],"default"]
-b:I[52267,["/_next/static/chunks/c000860f99373d94.js","/_next/static/chunks/b475fe756643a716.js","/_next/static/chunks/4bae855707b76f4b.js"],"SwRegister"]
+b:I[52267,["/_next/static/chunks/c000860f99373d94.js","/_next/static/chunks/b475fe756643a716.js","/_next/static/chunks/99712cb00c201486.js"],"SwRegister"]
 :HL["/_next/static/chunks/2d10a48fd70c1893.css","style"]
 2:T1a9c,(function(){
 "use strict";
@@ -105,7 +105,7 @@ try{
   }
 }catch(e){}
 })();
-0:{"buildId":"gucBDiQgDa6dJR2VPAE1o","rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2d10a48fd70c1893.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/c000860f99373d94.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/b475fe756643a716.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/4bae855707b76f4b.js","async":true}]],["$","html",null,{"lang":"fa","dir":"rtl","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$2"}}],"$L3","$L4","$L5"]}],"$L6"]}]]}],"loading":null,"isPartial":false}
+0:{"buildId":"qo2d59xyRTm3iyU6uVNFI","rsc":["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/chunks/2d10a48fd70c1893.css","precedence":"next"}],["$","script","script-0",{"src":"/_next/static/chunks/c000860f99373d94.js","async":true}],["$","script","script-1",{"src":"/_next/static/chunks/b475fe756643a716.js","async":true}],["$","script","script-2",{"src":"/_next/static/chunks/99712cb00c201486.js","async":true}]],["$","html",null,{"lang":"fa","dir":"rtl","suppressHydrationWarning":true,"children":[["$","head",null,{"children":[["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$2"}}],"$L3","$L4","$L5"]}],"$L6"]}]]}],"loading":null,"isPartial":false}
 3:["$","script",null,{"dangerouslySetInnerHTML":{"__html":"(function(){\n\"use strict\";\nif (!window.fetch) return;\nvar raw = window.fetch.bind(window);\nfunction isApi(u){\n  try{\n    if (typeof u !== \"string\") { if (u && u.url) u = u.url; else return false; }\n    if (u.indexOf(\"/api/\") === 0 || u === \"/api\") return true;\n    if (u.indexOf(\"https://localhost/api/\") === 0 || u.indexOf(\"http://localhost/api/\") === 0) return true;\n    return false;\n  }catch(e){ return false; }\n}\nwindow.fetch = function(input, init){\n  try{\n    if (isApi(input)) {\n      var r = new Response(JSON.stringify({ error: \"offline-apk\" }),\n        { status: 404, headers: { \"Content-Type\": \"application/json\" } });\n      return Promise.resolve(r);\n    }\n  }catch(e){}\n  return raw(input, init);\n};\n})();\n\n"}}]
 7:Ta22,(function(){
 "use strict";
